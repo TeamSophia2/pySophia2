@@ -1,0 +1,5 @@
+.vscode
+sophia2/__pycache__/
+tests/__pycache__/
+.env
+
