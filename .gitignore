@@ -2,4 +2,6 @@
 sophia2/__pycache__/
 tests/__pycache__/
 .env
-
+build/
+dist/
+sophia2.egg-info/
