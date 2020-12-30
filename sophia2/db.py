@@ -1,13 +1,12 @@
 from os import getenv
 import pandas as pd
 
-
 __username__ = getenv('SOPHIA_USER')
 __password__ = getenv('SOPHIA_PASS')
 
 
 def set_credentials(_username="guest", _password="guest"):
-    global username, password
+    global __username__, __password__
     __username__ = _username
     __password__= _password
 
@@ -22,4 +21,4 @@ def load_dataset():
 		return df
 
 #save on js? as parameter of load or another function especially for download?
-if not __username__: set_credentials()
+if __username__ is None: set_credentials()

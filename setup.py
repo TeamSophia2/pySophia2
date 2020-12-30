@@ -10,11 +10,11 @@ README = (HERE / "README.md").read_text()
 # This call to setup() does all the work
 setup(
     name="sophia2",
-    version="0.0.1",
+    version="0.0.2",
     description="Python library for news dircourse analysis",
     long_description=README,
     long_description_content_type="text/markdown",
-    url="https://github.com/realpython/reader",
+    url="https://sophia2.readthedocs.io/en/latest/",
     author="Team Sophia2",
     author_email="sophia2.uach@gmail.com",
     license="MIT",
