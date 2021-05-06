@@ -1,31 +1,34 @@
-from sophia2 import Sophia2
 from pandas import DataFrame
-import pytest
 import pandas as pd
+import pytest, os, sys
 
-def dataset():
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+#sys.path.append('../')
+import sophia2
+
+print(os.getcwd())
+
+@pytest.fixture
+def fixture_dataset():
 	data = {'id':[1,2], 
 'country':['chile','france'],
 'media_outlet':['latercera','mediapart'], 'url':['www','www'], 
 'title':['un titulo','un titre'], 
 'text':['un texto','un texte'], 
 'date':['2020-01-01','2020-01-02']}
-	pd.DataFrame(data=data)
-	return pd
+	df = pd.DataFrame(data=data)
+	return df
 
 def test_load_dataset():
-	user = "investigador"
-	password = "contraseña"
-	sophia2 = Sophia2(user, password)
-	dataset = sophia2.load_dataset()
+
+	dataset = sophia2.db.load_dataset()
 	assert len(dataset) > 0
 	assert type(dataset) is DataFrame
 
-@pytest.fixture
-def test_get_nbdocuments(dataset):
-	sophia2 = Sophia2()
-	nbdocuments=sophia.get_nbdocuments(dataset)
-	assert nbdocuments is int
+
+def test_get_nbdocuments(fixture_dataset):
+	#print(fixture_dataset)
+	nbdocuments=sophia2.sophia2.get_nbdocuments(fixture_dataset)
 	assert nbdocuments == 2
 
 #def test_connect_database():
