@@ -1,3 +1,3 @@
-# sophia2
+# pysophia2
 
-see the documentation: https://sophia2.readthedocs.io/en/latest/
+source code: https://github.com/TeamSophia2/pySophia2

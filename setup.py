@@ -9,25 +9,20 @@ README = (HERE / "README.md").read_text()
 
 # This call to setup() does all the work
 setup(
-    name="sophia2",
-    version="0.0.2",
-    description="Python library for news dircourse analysis",
+    name="pysophia2",
+    version="0.0.1",
+    description="Python library for news discourse analysis",
     long_description=README,
     long_description_content_type="text/markdown",
-    url="https://sophia2.readthedocs.io/en/latest/",
+    url="https://github.com/TeamSophia2/pySophia2",
     author="Team Sophia2",
-    author_email="sophia2.uach@gmail.com",
+    author_email="mvernier@inf.uach.cl",
     license="MIT",
     classifiers=[
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8"
     ],
-    packages=["sophia2"],
-    #include_package_data=True, #permite agregar archivos que no son codigo en el MANIFEST.in
-    install_requires=["pandas"],
-    #entry_points={
-    #    "console_scripts": [
-    #        "realpython=reader.__main__:main",
-    #    ]
-    #},
+    packages=["pysophia2"],
+    install_requires=["pandas", "mariadb", "elasticsearch", "spacy", "matplotlib", "numpy"],
+
 )

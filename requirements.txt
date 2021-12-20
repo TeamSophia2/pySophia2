@@ -1,5 +1,8 @@
-pytest==5.3.5
-pandas==0.24.2
-sphinx==3.3.1
+pytest
+pandas
+sphinx
 mariadb
-
+elasticsearch
+spacy
+numpy
+matplotlib
