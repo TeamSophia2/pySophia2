@@ -167,7 +167,7 @@ def view(word_distribution, words, annotate=False, normalize=True):
     
     
 def freq(word_distribution,top_n=None, words=None, graph=True):
-    fig, ax = plt.subplots()
+    
     """return the frequency for a top_n words or a arbitrary array of words. It can be graphed.
     
      Args:
@@ -191,6 +191,7 @@ def freq(word_distribution,top_n=None, words=None, graph=True):
     elif top_n!=None:
         top=concept_freq_total.most_common(top_n)
         if graph:
+            fig, ax = plt.subplots()
         
             x = [x[0] for x in top]
             y = [x[1]/total_news for x in top]
@@ -200,12 +201,17 @@ def freq(word_distribution,top_n=None, words=None, graph=True):
         return top
     elif words!=None:
         y = []
+        wlist=[]
         for word in words:
             y.append(concept_freq_total[word]/total_news)
-        ax.bar(words,y)
-        ax.set_title("Term frecuency bar graph")
-        ax.set_ylabel('Frequency', fontsize=12)
-        ax.tick_params(axis='x', rotation=90)
+            wlist.append((word,concept_freq_total[word]))
+        if graph:
+            fig, ax = plt.subplots()
+            ax.bar(words,y)
+            ax.set_title("Term frecuency bar graph")
+            ax.set_ylabel('Frequency', fontsize=12)
+            ax.tick_params(axis='x', rotation=90)
+        return wlist
         
         
 
