@@ -182,19 +182,35 @@ def last_n(n=1):
     sql_vars["__cursor__"].execute("SELECT *, month(date) as month FROM news ORDER BY ID DESC LIMIT ?" , (n,))
     return pd.DataFrame(sql_vars["__cursor__"].fetchall(), columns=columns)
 
-def get_dataset(country, _from, _to, keywords=None):
+def get_dataset(country, _from, _to, keywords=None, keywords_operator="or", phrase= False):
     """Provides a dataset of news from the specified country in a period between two dates.
     
      Args:
         country (string, required): country from the list_countries. 
         from_ (string, required):  It must be passed as a string with the following format: YYYY/MM/DD.
         to_ (string, required): It must be passed as a string with the following format: YYYY/MM/DD.
-        keywords ([string], optional): a list of words. 
+        keywords (string, optional): a list of words separated by space. 
+        keywords_operator(string, optional): allow match the news that have all the words passed on keywords or just one word is enought to retrieve the news must be or|and 
         
     Returns:
         df: PySophia2DataSet
     """
     global elastic_vars
+    
+    if phrase:
+        must=[{"match_phrase": {
+            "text":{"query": keywords
+                   }
+        }
+              }]
+    else:
+        must=[{"match": {
+            "text":{"query": keywords,
+                    "operator": keywords_operator}
+        }
+              }]
+        
+    
     if keywords==None or keywords=="":
                 query = {
             "query": { 
@@ -216,14 +232,11 @@ def get_dataset(country, _from, _to, keywords=None):
                 }
             }
     else:
+        
         query = {
             "query": { 
                 "bool": {
-                    "must": [{
-                        "match": {
-                            "text":keywords
-                            }
-                        }],
+                    "must": must,
                     "filter":[
                         {"range":{
                             "date":{
@@ -235,13 +248,15 @@ def get_dataset(country, _from, _to, keywords=None):
                         {"term":{
                             "country": country
                             }
-                        }
+                        },
                         ]
                     }
                 }
-            }        
+            }
+                   
+                
 
-    res = elastic_vars["__es__"].search(index="news", body=query, size=10000)
+    res = elastic_vars["__es__"].search(index="news", query=query["query"], size=10000)
     n_news = res['hits']['total']['value']
     if n_news == 10000:
         print("Se encontraron mas de %d noticias, por favor acotar la fecha de busqueda" % n_news)
