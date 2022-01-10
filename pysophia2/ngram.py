@@ -166,7 +166,7 @@ def view(word_distribution, words, annotate=False, normalize=True):
     ax.tick_params(axis='x', rotation=90)
     
     
-def freq(word_distribution,top_n=None, words=None, graph=True):
+def freq(word_distribution,top_n=None, words=None, graph=True, normalize=True):
     
     """return the frequency for a top_n words or a arbitrary array of words. It can be graphed.
     
@@ -184,6 +184,8 @@ def freq(word_distribution,top_n=None, words=None, graph=True):
     for a in word_distribution:
         concept_freq_total= concept_freq_total + word_distribution[a]["dictionary"]
         total_news=total_news+word_distribution[a]["total_news"]
+    if not normalize:
+        total_news=1
     if top_n==None and words ==None:
         print("debes pasar como argumento top_n o un arreglo words")
     elif top_n!=None and words !=None:
