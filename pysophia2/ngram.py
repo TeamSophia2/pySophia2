@@ -26,7 +26,7 @@ def setup():
     
 if not util.is_package("es_core_news_md"):
     subprocess.run("python -m spacy download es_core_news_md")
-    print("...instalando el modelo de leguanje 'es_core_news_md', porfavor reiniciar el kernel y vuelva a importar la libreria")
+    print("...instalando el modelo de lenguaje 'es_core_news_md', por favor reiniciar el kernel y vuelva a importar la librería")
 else:
     setup()
 
@@ -59,7 +59,7 @@ def get_keywords(dataFrame):
             filteredText=filteredText+str(span.text.lower().strip())+","
         dataFrame.loc[index,'keywords']=filteredText
         
-def get_frequency(df):
+def get_frequency(dataFrame):
     
     """Create a dictionary with the frequency for the terms in Keyword column.
     
@@ -70,34 +70,34 @@ def get_frequency(df):
         Dict: it has a Counter with the times that each word appears on the keywords for the news.
     """
     
-    if "keywords" not in df:
-        get_keywords(df)
+    if "keywords" not in dataFrame:
+        get_keywords(dataFrame)
     concept_freq_total=Counter({})
 
-    for index, row in df.iterrows():
+    for index, row in dataFrame.iterrows():
         arreglo=row["keywords"].split(",")
         arreglo.pop()
         arreglo=list(dict.fromkeys(arreglo))#elimina los duplicados para contar una vez por noticia cada palabra
         concept_freq = Counter(arreglo)
         concept_freq_total = concept_freq_total + concept_freq
-    return {"total_news":len(df),"total_elements": sum(concept_freq_total.values()), "dictionary": concept_freq_total}
+    return {"total_news":len(dataFrame),"total_elements": sum(concept_freq_total.values()), "dictionary": concept_freq_total}
 
-def group_by_date(dataset, granularity="month"):
+def group_by_date(dataFrame, granularity):
     """Group a set of news by a period.
     
      Args:
-        dataset (dataFrame, required): dataFrame with news in PySophia2 structure
+        dataFrame (dataFrame, required): dataFrame with news in PySophia2 structure
         granularity (string, required): could be day/month/year. Default: Month
         
     Returns:
         group_by: return a pandas groupby struct with all the news grouped by a period.
     """
     if granularity == "month":
-        return dataset.groupby(by=["month","year"])
+        return dataFrame.groupby(by=["month","year"])
     if granularity == "year":
-        return dataset.groupby(by=["year"])
+        return dataFrame.groupby(by=["year"])
     if granularity == "day":
-        return dataset.groupby(by=["date"])
+        return dataFrame.groupby(by=["date"])
     
     
 def calculateDist(dataset,group_by="month"):
@@ -174,7 +174,8 @@ def freq(word_distribution,top_n=None, words=None, graph=True, normalize=True):
         word_distribution (Sophia2WordDistribution, required): struct calculated through calculateDist function.
         top_n (int,optional): quantity of the top words you want to get.
         words ([string], required): list words.
-        graph (bool, optional): activate or deactivate the graph.
+        graph (bool, optional): activate or deactivate the graph. Default: True
+        normalize (bool, optional): activate or deactivate normalization in frequency on the graph. Default: True
         
     Returns:
         None
@@ -216,5 +217,3 @@ def freq(word_distribution,top_n=None, words=None, graph=True, normalize=True):
         return wlist
         
         
-
-

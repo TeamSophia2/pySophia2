@@ -62,7 +62,7 @@ def login(__username__="", __password__="", __host__=None, __port__=None, __data
     """login into Sun database through a mariadb sql adapter.
 
     Args:
-        __username__ (str, optional): username for database. Defaults to "sophia2api".
+        __username__ (str, required): username for database. Defaults to "sophia2api".
         __password__ (str, required): password for database. Defaults to "".
         __host__ (str, optional): host ip. Defaults to "45.79.130.8".
         __port__ (int, optional): host port. Defaults to 14096.
@@ -108,6 +108,9 @@ def __connection_validator():
 
 def list_countries():
     """provides a list with all the countries that currently have media outlets in Sun.
+    
+    Args:
+        __username__ (str, required): username for database. Defaults to "sophia2api".
 
     Returns:
         [string]: [country_name]
@@ -294,7 +297,7 @@ def export_to_csv(df, name="default"):
     df.to_csv(name,sep=";")
     print("dataset saved as"+name+".csv")
     
-## FUNCIONES CASO DE USO 3
+## METODOS FUNCIONALIDAD 3
 
 def popularity(sources, _from, _to):
     """provides a dataframe with all the sources and it's popularity between two dates, grouped by month.
@@ -367,15 +370,32 @@ def gender(country = "Chile",_from="2020-01-01",_to="2021-12-31"):
         rows.append(row)
     return pd.DataFrame(rows,columns=["gender","news","month","year"])
 
-def top_mentions(top_n=10,_from="2020-01-01",_to="2021-12-31"): 
-    """provide a dataframe with the top_n sources in a peroid .
+def top_mentions(country="Chile", top_n=10,_from="2020-01-01",_to="2021-12-31"): 
+    """provide a dataframe with the top_n ranking of sources mentioned in a peroid .
     
     Args:
-        top_n ([int], required): list of sources for get it's news
+        country (string, required): the country for calculate the ranking.
+        top_n (int, required): the lenght of the ranking.
         __from (string, required): it must be passed as a string with the following format: YYYY/MM/DD.
         __to (string, required): it must be passed as a string with the following format: YYYY/MM/DD.
     Returns:
-        df: top n sources 
+        df: top n sources list. 
+    """
+    rows=[]
+    sql_vars["__cursor__"].execute("SELECT s.source_name, count(n.id) FROM mention LEFT JOIN source s ON s.id_source = mention.id_source LEFT JOIN news n ON n.id = mention.id_news WHERE n.country = ? AND n.`date` >= ? AND n.`date` <= ? GROUP BY s.source_name ORDER BY count(n.id) DESC LIMIT ?",(country,_from,_to,top_n))     
+    for row in sql_vars["__cursor__"].fetchall():
+        rows.append(row)
+    return pd.DataFrame(rows,columns=["source","mentions"])
+
+def top_popularity(top_n=10,_from="2020-01-01",_to="2021-12-31"): 
+    """provide a dataframe with the top_n sources in a peroid .
+    
+    Args:
+        top_n ([int], required): list of sources for get it's news.
+        __from (string, required): it must be passed as a string with the following format: YYYY/MM/DD.
+        __to (string, required): it must be passed as a string with the following format: YYYY/MM/DD.
+    Returns:
+        df: top n sources.
     """
     rows=[]
     sql_vars["__cursor__"].execute("SELECT s.source_name, (SUM(popularity_pt)+SUM(popularity_fr)+SUM(popularity_it)+SUM(popularity_es)+SUM(popularity_en)) AS TotalPop FROM has_popularity LEFT JOIN source s ON s.id_source = has_popularity.id_source WHERE popularity_date >= ? AND popularity_date <= ? GROUP BY s.source_name ORDER BY TotalPop DESC LIMIT ?",(_from,_to,top_n))     
