@@ -10,7 +10,7 @@ README = (HERE / "README.md").read_text()
 # This call to setup() does all the work
 setup(
     name="pysophia2",
-    version="0.1.2",
+    version="0.1.3",
     description="Python library for news discourse analysis",
     long_description=README,
     long_description_content_type="text/markdown",
@@ -23,6 +23,6 @@ setup(
         "Programming Language :: Python :: 3.8"
     ],
     packages=["pysophia2"],
-    install_requires=["pandas", "mariadb", "elasticsearch", "spacy", "matplotlib", "numpy"],
+    install_requires=["pandas", "mariadb", "elasticsearch>=7.16.3", "spacy", "matplotlib", "numpy"],
 
 )
